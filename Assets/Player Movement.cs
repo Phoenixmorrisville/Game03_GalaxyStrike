@@ -8,6 +8,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float xClampRange = 5f;
     [SerializeField] float yClampRange = 5f;
 
+    [SerializeField] float controllRollFactor = 20f;
+    [SerializeField] float controllPitchFactor = 18f;
+    [SerializeField] float rotationSpeed = 10f;
+
+
     Vector2 movement;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -26,6 +31,16 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         ProcessTranslation();
+        ProcessRotation();
+    }
+
+    private void ProcessRotation()
+    {
+        float pitch = movement.y * -controllPitchFactor;
+        float roll = movement.x * -controllRollFactor;
+
+        Quaternion targetRotation = Quaternion.Euler(pitch, 0f, roll);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     public void OnMove (InputValue value)
